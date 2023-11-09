@@ -1,29 +1,74 @@
 const questions=[
     {
-        question:"which is largest animal in the world?",
+        question:"JSON stands for _______.",
          answers:[
-            {text:"Shark", correct:false  },
-            {text:"Blue whale", correct:true},
-            {text:'Elephant', correct:false},
-            {text:'Giraffe', correct:false}
+            {text:"JavaScript Object Notation", correct:false  },
+            {text:"Java Object Notation", correct:false},
+            {text:'JavaScript Object Normalization', correct:true},
+            {text:'JavaScript Object-Oriented Notation', correct:false}
+         ]
+     },
+    {
+        question:"JSON is a _____ for storing and transporting data",
+         answers:[
+            {text:"xml format", correct:false  },
+            {text:"text format", correct:true},
+            {text:'JavaScript', correct:false},
+            {text:'php format', correct:false}
          ]
     },
     {
-        question:"which is largest animal in the world?",
+        question:"The JSON syntax is a subset of the _____ syntax.",
          answers:[
-            {text:"Shark", correct:false  },
-            {text:"Blue whale", correct:true},
-            {text:'Elephant', correct:false},
-            {text:'Giraffe', correct:false}
+            {text:"Ajax", correct:false  },
+            {text:"JavaScript", correct:true},
+            {text:'Php', correct:false},
+            {text:'HTML', correct:false}
          ]
     },
     {
-        question:"which is largest animal in the world?",
+        question:" Who is the creator of JSON ?"  ,
          answers:[
-            {text:"Shark", correct:false  },
-            {text:"Blue whale", correct:true},
-            {text:'Elephant', correct:false},
-            {text:'Giraffe', correct:false}
+            {text:"Ajax", correct:false  },
+            {text:"JavaScript", correct:true},
+            {text:'Php', correct:false},
+            {text:'HTML', correct:false}
+         ]
+    },
+    {
+        question:"JSON stands for _______.",
+         answers:[
+            {text:"JavaScript Object Notation", correct:false  },
+            {text:"Java Object Notation", correct:false},
+            {text:'JavaScript Object Normalization', correct:true},
+            {text:'JavaScript Object-Oriented Notation', correct:false}
+         ]
+     },
+    {
+        question:"JSON is a _____ for storing and transporting data",
+         answers:[
+            {text:"xml format", correct:false  },
+            {text:"text format", correct:true},
+            {text:'JavaScript', correct:false},
+            {text:'php format', correct:false}
+         ]
+    },
+    {
+        question:"The JSON syntax is a subset of the _____ syntax.",
+         answers:[
+            {text:"Ajax", correct:false  },
+            {text:"JavaScript", correct:true},
+            {text:'Php', correct:false},
+            {text:'HTML', correct:false}
+         ]
+    },
+    {
+        question:" Who is the creator of JSON ?"  ,
+         answers:[
+            {text:"Ajax", correct:false  },
+            {text:"JavaScript", correct:true},
+            {text:'Php', correct:false},
+            {text:'HTML', correct:false}
          ]
     }
 ];
@@ -34,6 +79,34 @@ const  nextButton = document.getElementById("next-btn");
 
 let currentQuestionIndex=0;
 let score=0;
+function startQuiz(){
+    currentQuestionIndex=0;
+    score=0;
+    nextButton.innerHTML="Next";
+    showQuestion();
+}
+
+function showQuestion(){
+    resetState();
+    let currentQuestion = questions[currentQuestionIndex];
+    let questionNo= currentQuestionIndex + 1;
+    questionElement.innerHTML = questionNo+". "+currentQuestion.question;
+
+    currentQuestion.answers.forEach(answer =>{
+        const button = document.createElement("button");
+          button.innerHTML=answer.text;
+          button.classList.add("btn");
+          answerButtons.appendChild(button);
+          if(answer.correct){
+            button.dataset.correct = answer.correct;
+          }
+          button.addEventListener('click',selectAnswer)
+
+    });
+}
+
+
+
 function resetState(){
     nextButton.style.display="none";
     while(answerButtons.firstChild){
@@ -41,36 +114,51 @@ function resetState(){
     }
 }
 
+function selectAnswer(e){
+    const selectedBtn =e.target;
+    const isCorrect = selectedBtn.dataset.correct === "true";
+    if(isCorrect){
+        selectedBtn.classList.add("correct");
+        score++;
 
-
-function showQuestion(){
-    resetState();
-    let currentQuestion = questions[currentQuestionIndex];
-    let questionNo= currentQuestionIndex+1;
-    questionElement.innerHTML=questionNo+". "+currentQuestion.question;
-
-    currentQuestion.answers.forEach(answer =>{
-        const button = document.createElement("button")
-          button.innerHTML=answer.text;
-          button.classList.add('btn');
-          answerButtons.appendChild(button);
-
+    }else{
+        selectedBtn.classList.add("incorrect");
+    }
+    Array.from(answerButtons.children).forEach(button =>{
+        if(button.dataset.correct === "true"){
+            button.classList.add("correct");
+        }
+        button.disabled =true;
     });
+    nextButton.style.display ="block";
 }
-function startQuiz(){
-    currentQuestionIndex=0;
-    score=0;
-    nextButton.innerHTML="Next";
-    showQuestion()
+function showScore(){
+    resetState();
+    questionElement.innerHTML = `You scored ${score} out of ${questions.length}!`;
+    nextButton.innerHTML ="play Again";
+    nextButton.style.display= "block";
 }
+
+function handleNextButton(){
+    currentQuestionIndex++;
+    if( currentQuestionIndex < questions.length){
+        showQuestion();
+    }else{
+        showScore();
+    }
+}
+
+nextButton.addEventListener("click", ()=>{
+    if(currentQuestionIndex < questions.length){
+        handleNextButton();
+    }else{
+        startQuiz();
+    }
+});
 
 
 
 startQuiz();
-
-
-
-
 
 
 
